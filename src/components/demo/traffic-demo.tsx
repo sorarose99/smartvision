@@ -19,7 +19,7 @@ const trafficStates = [
     id: 'heavy',
     level: 'heavy',
     image: PlaceHolderImages.find((img) => img.id === 'traffic-high'),
-    signal: 'red' as const,
+    signal: 'green' as const,
     signage: {
       message: 'Heavy Congestion Detected',
       suggestion: 'Rerouting Recommended',
@@ -29,7 +29,7 @@ const trafficStates = [
     id: 'low',
     level: 'low',
     image: PlaceHolderImages.find((img) => img.id === 'traffic-low'),
-    signal: 'green' as const,
+    signal: 'red' as const,
     signage: {
       message: 'Traffic is Clear',
       suggestion: 'All Routes Open',
