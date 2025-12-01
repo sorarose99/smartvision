@@ -56,7 +56,7 @@ const trafficManagementPrompt = ai.definePrompt({
   
   Priorities:
   1.  **Safety First:** Prevent collisions. Conflicting directions at an intersection must NOT have green lights simultaneously. If North/South is green, East/West must be red.
-  2.  **Efficiency:** Prioritize streets with 'heavy' traffic to clear congestion. Recommend longer green light durations for heavier traffic (e.g., heavy: 45s, moderate: 25s, light: 15s).
+  2.  **Efficiency:** Prioritize streets with 'heavy' traffic to clear congestion. If a direction has heavy traffic, you should make it green. If there is no traffic in a direction, it should be red unless its corresponding direction has traffic.
   3.  **Coordination:** Consider the flow between nearby intersections. If a major road like 'King Fahd Rd' is heavy at multiple intersections, try to keep its primary flow direction green if it's safe to do so.
   
   For your decision, for the 'streetToMakeGreen' field, use one of the four cardinal directions: 'North', 'South', 'East', or 'West'. The simulation will handle turning both appropriate lights green (e.g., if you choose 'North', 'South' will also turn green).
