@@ -154,8 +154,7 @@ export default function InputPage() {
           Camera Processor & Live Demo
         </h1>
         <p className="text-muted-foreground">
-          Watch a live simulation of the AI analysis, or upload your own image
-          for processing.
+          Watch a live simulation of the AI analysis, or upload your own image(s) for processing.
         </p>
       </div>
 
@@ -169,7 +168,7 @@ export default function InputPage() {
                 <Video /> Manual Input Source
                 </CardTitle>
                 <CardDescription>
-                Upload up to 2 video frames to be analyzed by the AI.
+                Upload up to 2 image frames from a real or simulated video feed.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -180,7 +179,7 @@ export default function InputPage() {
                 <Input
                     id="file-upload"
                     type="file"
-                    accept="video/*,image/*"
+                    accept="image/*"
                     onChange={handleFileChange}
                     className="mt-2"
                     multiple
@@ -221,7 +220,7 @@ export default function InputPage() {
                         <BrainCircuit /> Advanced AI Analysis
                     </CardTitle>
                     <CardDescription>
-                        Ask a specific question about the uploaded image(s).
+                        Ask a specific question about the uploaded image(s). The AI will identify the context and answer.
                     </CardDescription>
                 </CardHeader>
                  <CardContent className="space-y-4">

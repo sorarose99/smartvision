@@ -43,7 +43,7 @@ export function TrafficDemo() {
     <Card>
       <CardHeader>
         <CardTitle>Live Traffic Analysis Demo</CardTitle>
-        <CardDescription>Slide between different traffic scenarios to see the AI response.</CardDescription>
+        <CardDescription>Slide between a heavy traffic scenario and an empty street to see how the AI responds by changing signals and digital signs.</CardDescription>
       </CardHeader>
       <CardContent>
         <Carousel className="w-full">
@@ -63,7 +63,7 @@ export function TrafficDemo() {
                                         data-ai-hint={state.image.imageHint}
                                     />
                                     <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                                        Live Feed: {state.level === 'heavy' ? 'Intersection A' : 'Intersection B'}
+                                        Live Feed: {state.level === 'heavy' ? 'Intersection A (Heavy)' : 'Intersection B (Empty)'}
                                     </div>
                                 </div>
 
