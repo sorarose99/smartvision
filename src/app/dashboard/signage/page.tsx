@@ -1,51 +1,63 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { AlertTriangle, ArrowRight, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { TrafficWarningOutput } from '@/ai/flows/generate-traffic-warning-message';
+import { AnalysisContext } from '@/context/AnalysisContext';
 
-const messages = [
+const simulatedMessages: TrafficWarningOutput[] = [
     {
-        trafficLevel: "heavy",
         message: "Heavy Congestion on I-5 North",
         suggestedRoute: "Use Hwy 99 -> Express Ln -> Exit 164"
     },
     {
-        trafficLevel: "moderate",
         message: "Moderate Traffic Ahead",
         suggestedRoute: "Stay in right lane for faster flow"
     },
     {
-        trafficLevel: "light",
         message: "Traffic is Clear",
         suggestedRoute: "All routes clear. Drive safely."
     },
     {
-        trafficLevel: "heavy",
         message: "Accident reported on Bridge",
         suggestedRoute: "Take Lower Deck -> Port Exit -> Road 6"
     }
 ];
 
 export default function DigitalSignagePage() {
-    const [currentMessage, setCurrentMessage] = useState(messages[0]);
+    const { trafficAnalysis } = useContext(AnalysisContext);
+    const [currentMessage, setCurrentMessage] = useState(simulatedMessages[0]);
+    const [isSimulated, setIsSimulated] = useState(true);
     const [isVisible, setIsVisible] = useState(true);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setIsVisible(false); // Fade out
+     useEffect(() => {
+        if(trafficAnalysis) {
+            setIsVisible(false);
             setTimeout(() => {
-                setCurrentMessage(prev => {
-                    const currentIndex = messages.indexOf(prev);
-                    const nextIndex = (currentIndex + 1) % messages.length;
-                    return messages[nextIndex];
-                });
-                setIsVisible(true); // Fade in
-            }, 1000); // Time for fade-out animation
-        }, 8000); // Change message every 8 seconds
+                setCurrentMessage(trafficAnalysis);
+                setIsSimulated(false);
+                setIsVisible(true);
+            }, 500);
+        } else {
+            setIsSimulated(true);
+            const interval = setInterval(() => {
+                setIsVisible(false); // Fade out
+                setTimeout(() => {
+                    setCurrentMessage(prev => {
+                        const currentIndex = simulatedMessages.indexOf(prev);
+                        const nextIndex = (currentIndex + 1) % simulatedMessages.length;
+                        return simulatedMessages[nextIndex];
+                    });
+                    setIsVisible(true); // Fade in
+                }, 1000); // Time for fade-out animation
+            }, 8000); // Change message every 8 seconds
 
-        return () => clearInterval(interval);
-    }, []);
+            return () => clearInterval(interval);
+        }
+    }, [trafficAnalysis]);
+
+    const isHeavy = currentMessage.message.toLowerCase().includes('heavy') || currentMessage.message.toLowerCase().includes('accident');
 
     return (
         <div className="fixed inset-0 bg-gray-900 text-white flex flex-col items-center justify-center p-4 z-50">
@@ -55,9 +67,15 @@ export default function DigitalSignagePage() {
                     Connect to Device
                 </Button>
             </div>
+             {isSimulated && (
+                <div className="absolute top-6 left-6 bg-yellow-900/80 border border-yellow-700 text-yellow-200 text-sm rounded-md p-3 flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    Displaying simulated data. Go to the Camera Processor to analyze a real image.
+                </div>
+            )}
             <div className={`transition-opacity duration-1000 w-full max-w-6xl text-center ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-                <div className="flex items-center justify-center gap-4 mb-8 animate-pulse">
-                    <AlertTriangle className="h-16 w-16 text-yellow-400" />
+                <div className="flex items-center justify-center gap-4 mb-8">
+                    <AlertTriangle className={`h-16 w-16 text-yellow-400 ${isHeavy ? 'animate-pulse' : 'opacity-50'}`} />
                     <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight text-yellow-400">
                         TRAFFIC ALERT
                     </h1>

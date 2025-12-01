@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -13,12 +13,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { BrainCircuit, Loader, Video } from 'lucide-react';
-import { analyzeParking } from '@/ai/flows/analyze-parking';
-import { generateTrafficWarningMessage } from '@/ai/flows/generate-traffic-warning-message';
+import { analyzeParking, ParkingAnalysisOutput } from '@/ai/flows/analyze-parking';
+import { generateTrafficWarningMessage, TrafficWarningOutput } from '@/ai/flows/generate-traffic-warning-message';
 import { DemoSwitcher } from '@/components/demo/demo-switcher';
 import { Textarea } from '@/components/ui/textarea';
 import { analyzeScene } from '@/ai/flows/analyze-scene';
 import Image from 'next/image';
+import { AnalysisContext } from '@/context/AnalysisContext';
+import { useRouter } from 'next/navigation';
+
 
 export default function InputPage() {
   const [files, setFiles] = useState<File[]>([]);
@@ -28,6 +31,10 @@ export default function InputPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [analysisResult, setAnalysisResult] = useState<object | null>(null);
+
+  const { setParkingAnalysis, setTrafficAnalysis } = useContext(AnalysisContext);
+  const router = useRouter();
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -68,25 +75,31 @@ export default function InputPage() {
     setAnalysisResult(null);
 
     try {
-      let result;
       if (scenario === 'parking') {
-        result = await analyzeParking({
+        const result: ParkingAnalysisOutput = await analyzeParking({
           totalSpots: 60, // This could be dynamic based on locationId
           videoFrame: inputFrame,
         });
+         setAnalysisResult(result);
+         setParkingAnalysis(result);
+         router.push('/dashboard/parking-status');
+
       } else {
-        result = await generateTrafficWarningMessage({
+        const result: TrafficWarningOutput = await generateTrafficWarningMessage({
           trafficLevel: 'heavy',
           congestionDetails: 'Accident detected on video feed.',
         });
+         setAnalysisResult(result);
+         setTrafficAnalysis(result);
+         router.push('/dashboard/signage');
       }
 
-      setAnalysisResult(result);
-      setStatus('Analysis complete.');
+      setStatus('Analysis complete. Navigating to live monitor...');
       toast({
         title: 'Analysis Complete',
-        description: `The ${scenario} analysis has finished successfully.`,
+        description: `The ${scenario} analysis has finished. Redirecting...`,
       });
+
     } catch (err: any) {
       console.error(err);
       setStatus('Error: ' + (err.message || 'An unknown error occurred.'));
@@ -154,13 +167,11 @@ export default function InputPage() {
           Camera Processor & Live Demo
         </h1>
         <p className="text-muted-foreground">
-          Watch a live simulation of the AI analysis, or upload your own image(s) for processing.
+          Upload your own image(s) to drive the live monitors, or watch a pre-built simulation below.
         </p>
       </div>
 
-      <DemoSwitcher />
-
-      <div className="grid md:grid-cols-2 gap-6 items-start">
+       <div className="grid md:grid-cols-2 gap-6 items-start">
         <div className='flex flex-col gap-6'>
             <Card>
             <CardHeader>
@@ -168,13 +179,13 @@ export default function InputPage() {
                 <Video /> Manual Input Source
                 </CardTitle>
                 <CardDescription>
-                Upload up to 2 image frames from a real or simulated video feed.
+                Upload an image to analyze. The result will update the relevant live monitor page.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div>
                 <Label htmlFor="file-upload">
-                    Upload up to 2 images or video frames
+                    Upload up to 2 images (the first will be used for simple analysis)
                 </Label>
                 <Input
                     id="file-upload"
@@ -198,8 +209,8 @@ export default function InputPage() {
                     onClick={() => handleSimpleAnalysis('traffic')}
                     disabled={isLoading || files.length === 0}
                 >
-                    {isLoading && <Loader className="mr-2 animate-spin" />}
-                    Analyze Traffic
+                    {isLoading && status.includes('traffic') ? <Loader className="mr-2 animate-spin" /> : null}
+                    Analyze Traffic & View Signage
                 </Button>
                 <Button
                     className="w-full sm:w-auto"
@@ -207,8 +218,8 @@ export default function InputPage() {
                     onClick={() => handleSimpleAnalysis('parking')}
                     disabled={isLoading || files.length === 0}
                 >
-                    {isLoading && <Loader className="mr-2 animate-spin" />}
-                    Analyze Parking
+                    {isLoading && status.includes('parking') ? <Loader className="mr-2 animate-spin" /> : null}
+                    Analyze Parking & View Status
                 </Button>
                 </div>
             </CardContent>
@@ -220,7 +231,7 @@ export default function InputPage() {
                         <BrainCircuit /> Advanced AI Analysis
                     </CardTitle>
                     <CardDescription>
-                        Ask a specific question about the uploaded image(s). The AI will identify the context and answer.
+                        Ask a specific question about the uploaded image(s). The AI will identify the context and answer. (Does not update monitors).
                     </CardDescription>
                 </CardHeader>
                  <CardContent className="space-y-4">
@@ -240,7 +251,7 @@ export default function InputPage() {
                             onClick={handleAdvancedAnalysis}
                             disabled={isLoading || files.length === 0 || !question}
                         >
-                            {isLoading && <Loader className="mr-2 animate-spin" />}
+                            {isLoading && status.includes('advanced') ? <Loader className="mr-2 animate-spin" /> : null}
                             Ask AI
                         </Button>
                         <div className="ml-auto text-sm text-muted-foreground pt-2">Status: {status}</div>
@@ -266,6 +277,8 @@ export default function InputPage() {
           </Card>
         )}
       </div>
+
+      <DemoSwitcher />
     </div>
   );
 }

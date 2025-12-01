@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Car, Clock, Wifi } from 'lucide-react';
+import { useState, useEffect, useContext } from 'react';
+import { Car, Clock, Wifi, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Card,
@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import { ParkingAnalysisOutput } from '@/ai/flows/analyze-parking';
+import { AnalysisContext } from '@/context/AnalysisContext';
 
 type ParkingStatus = 'busy' | 'moderate' | 'free';
 type StatusInfo = {
@@ -38,63 +40,21 @@ const statusMap: Record<ParkingStatus, StatusInfo> = {
   },
 };
 
-// Simulate live data for a parking station
-const useParkingData = () => {
-  const [parkingData, setParkingData] = useState({
+const initialParkingData: ParkingAnalysisOutput = {
     totalSpots: 60,
     occupiedSpots: 45,
     availableSpots: 15,
     occupancyRate: 75,
-    status: 'busy' as ParkingStatus,
-  });
+    status: 'busy',
+    message: 'Simulated data. Parking is almost full.'
+}
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setParkingData((prevData) => {
-        // Simulate a car leaving or arriving
-        const change = Math.random() > 0.5 ? 1 : -1;
-        let occupiedSpots = prevData.occupiedSpots + change;
-
-        // Clamp values
-        if (occupiedSpots > prevData.totalSpots)
-          occupiedSpots = prevData.totalSpots;
-        if (occupiedSpots < 0) occupiedSpots = 0;
-
-        const availableSpots = prevData.totalSpots - occupiedSpots;
-        const occupancyRate = Math.round(
-          (occupiedSpots / prevData.totalSpots) * 100
-        );
-
-        let status: ParkingStatus;
-        if (occupancyRate > 80) {
-          status = 'busy';
-        } else if (occupancyRate > 40) {
-          status = 'moderate';
-        } else {
-          status = 'free';
-        }
-
-        return {
-          ...prevData,
-          occupiedSpots,
-          availableSpots,
-          occupancyRate,
-          status,
-        };
-      });
-    }, 3000); // Update every 3 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return parkingData;
-};
 
 export default function ParkingStatusPage() {
-  const parkingData = useParkingData();
-  const { availableSpots, occupancyRate, status, totalSpots, occupiedSpots } =
-    parkingData;
-  const statusInfo = statusMap[status];
+  const { parkingAnalysis } = useContext(AnalysisContext);
+  const [parkingData, setParkingData] = useState<ParkingAnalysisOutput>(initialParkingData);
+  const [isSimulated, setIsSimulated] = useState(true);
+
   const [liveTime, setLiveTime] = useState('');
 
   useEffect(() => {
@@ -108,6 +68,57 @@ export default function ParkingStatusPage() {
 
     return () => clearInterval(interval);
   }, []);
+
+
+  useEffect(() => {
+      if(parkingAnalysis){
+          setParkingData(parkingAnalysis);
+          setIsSimulated(false);
+      } else {
+          setIsSimulated(true);
+          const interval = setInterval(() => {
+            setParkingData((prevData) => {
+              // Simulate a car leaving or arriving
+              const change = Math.random() > 0.5 ? 1 : -1;
+              let occupiedSpots = prevData.occupiedSpots + change;
+
+              // Clamp values
+              if (occupiedSpots > prevData.totalSpots)
+                occupiedSpots = prevData.totalSpots;
+              if (occupiedSpots < 0) occupiedSpots = 0;
+
+              const availableSpots = prevData.totalSpots - occupiedSpots;
+              const occupancyRate = Math.round(
+                (occupiedSpots / prevData.totalSpots) * 100
+              );
+
+              let status: ParkingStatus;
+              if (occupancyRate > 80) {
+                status = 'busy';
+              } else if (occupancyRate > 40) {
+                status = 'moderate';
+              } else {
+                status = 'free';
+              }
+
+              return {
+                ...prevData,
+                occupiedSpots,
+                availableSpots,
+                occupancyRate,
+                status,
+                message: `Simulated data. ${statusMap[status].message}`
+              };
+            });
+          }, 3000); // Update every 3 seconds
+
+          return () => clearInterval(interval);
+      }
+  }, [parkingAnalysis])
+
+  const { availableSpots, occupancyRate, status, totalSpots, occupiedSpots, message } =
+    parkingData;
+  const statusInfo = statusMap[status];
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 h-full relative">
@@ -126,6 +137,13 @@ export default function ParkingStatusPage() {
         </p>
       </div>
 
+       {isSimulated && (
+        <div className="bg-yellow-100 dark:bg-yellow-900/50 border border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200 text-sm rounded-md p-3 flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
+            Displaying simulated data. Go to the Camera Processor to analyze a real image.
+        </div>
+      )}
+
       <div className="grid md:grid-cols-2 gap-8 w-full max-w-4xl">
         <Card className="flex flex-col items-center justify-center p-6">
           <CardHeader className="items-center pb-2">
@@ -140,7 +158,7 @@ export default function ParkingStatusPage() {
             >
               {availableSpots}
             </div>
-            <p className="text-muted-foreground">{statusInfo.message}</p>
+            <p className="text-muted-foreground">{message}</p>
           </CardContent>
         </Card>
 
