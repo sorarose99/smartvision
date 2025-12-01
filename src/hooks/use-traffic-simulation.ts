@@ -12,7 +12,7 @@ type ExtendedIntersectionState = IntersectionState & {
 type IntersectionStates = Record<string, ExtendedIntersectionState>;
 type SimulationStatus = 'stopped' | 'running' | 'error';
 
-const SIMULATION_INTERVAL = 15000; // 15 seconds for AI decision
+const SIMULATION_INTERVAL = 60000; // 60 seconds for AI decision
 const YELLOW_LIGHT_DURATION = 2000; // 2 seconds for yellow light
 
 export const useTrafficSimulation = (sites: Site[]) => {
