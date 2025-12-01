@@ -46,7 +46,7 @@ const trafficManagementPrompt = ai.definePrompt({
     }),
   },
   output: {schema: TrafficFlowOutputSchema},
-  prompt: `You are an advanced AI traffic controller for Riyadh, Saudi Arabia. Your goal is to optimize traffic flow and ensure safety across multiple intersections.
+  prompt: `You are an advanced AI traffic controller for Riyadh, Saudi Arabia, acting like a traffic policeman. Your goal is to optimize traffic flow and ensure safety across multiple intersections by making real-time decisions.
   
   You will be given the current state of all intersections, including their traffic levels and the current state of their traffic lights.
 
@@ -58,7 +58,7 @@ const trafficManagementPrompt = ai.definePrompt({
   1.  **Safety First:** Prevent collisions. Conflicting directions at an intersection must NOT have green lights simultaneously. If North/South is green, East/West must be red.
   2.  **Efficiency:** Your primary goal is to clear congestion.
       -   **If a street has 'heavy' traffic, you MUST give it a green light.**
-      -   **If a street has 'light' or no traffic, it should be red**, unless the opposing direction has traffic.
+      -   **If a street has 'light' or no traffic, it should be red**, unless the opposing direction also has no traffic.
   3.  **Coordination:** Consider the flow between nearby intersections. If a major road like 'King Fahd Rd' is heavy at multiple intersections, try to keep its primary flow direction green if it's safe to do so.
   
   For your decision, for the 'streetToMakeGreen' field, use one of the four cardinal directions: 'North', 'South', 'East', or 'West'. The simulation will handle turning both appropriate lights green (e.g., if you choose 'North', 'South' will also turn green).
