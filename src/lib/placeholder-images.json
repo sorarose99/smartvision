@@ -1,0 +1,58 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-animation",
+      "description": "A road with yellow lines, representing traffic and transit.",
+      "imageUrl": "https://images.unsplash.com/photo-1706954253724-edc834fd7349?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxyb2FkJTIweWVsbG93JTIwfGVufDB8fHx8MTc2NDQzNTkyMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "road yellow"
+    },
+    {
+      "id": "traffic-demo",
+      "description": "A busy city intersection with cars moving.",
+      "imageUrl": "https://images.unsplash.com/photo-1759629048426-5af53a2bd0eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxidXN5JTIwaW50ZXJzZWN0aW9ufGVufDB8fHx8MTc2NDMwNzA3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "busy intersection"
+    },
+    {
+      "id": "train-demo",
+      "description": "A train at a station platform.",
+      "imageUrl": "https://images.unsplash.com/photo-1556624651-1f527cdf6508?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0cmFpbiUyMHN0YXRpb258ZW58MHx8fHwxNzY0Mjc3MjUzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "train station"
+    },
+    {
+      "id": "user-avatar-1",
+      "description": "Avatar for a user.",
+      "imageUrl": "https://images.unsplash.com/photo-1548544149-4835e62ee5b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc2NDI5ODQ0Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person face"
+    },
+    {
+      "id": "video-placeholder",
+      "description": "Placeholder for a video preview",
+      "imageUrl": "https://images.unsplash.com/photo-1694878982024-9ea63dab0ca5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx2aWRlbyUyMHBsYWNlaG9sZGVyfGVufDB8fHx8MTc2NDMwNzA3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "video placeholder"
+    },
+    {
+      "id": "traffic-high",
+      "description": "A photo of a street with high traffic congestion.",
+      "imageUrl": "https://images.unsplash.com/photo-1597762333765-cbcd63dd8acc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoZWF2eSUyMHRyYWZmaWN8ZW58MHx8fHwxNzY0NTkyMjA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "traffic congestion"
+    },
+    {
+      "id": "traffic-low",
+      "description": "A photo of an empty street with no traffic.",
+      "imageUrl": "https://images.unsplash.com/photo-1702752261116-e2a8e38aac1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxubyUyMHRyYWZmaWN8ZW58MHx8fHwxNzY0NTgxOTY0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "clean road"
+    },
+    {
+      "id": "parking-full",
+      "description": "A full parking lot with many cars.",
+      "imageUrl": "https://images.unsplash.com/photo-1593280405106-e438ebe93f5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwYXJraW5nfGVufDB8fHx8MTc2NDU4MjA0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "full parking"
+    },
+    {
+      "id": "parking-empty",
+      "description": "An empty parking lot with few cars.",
+      "imageUrl": "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXJraW5nfGVufDB8fHx8MTc2NDU4MjA0M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "empty parking"
+    }
+  ]
+}
